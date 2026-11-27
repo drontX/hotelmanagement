@@ -1,0 +1,258 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String         @id @default(uuid())
+  name           String
+  email          String?        @unique
+  phone          String?        @unique
+  password       String?
+  role           String         @default("USER")
+  avatar         String?
+  googleId       String?        @unique
+  facebookId     String?        @unique
+  zaloId         String?        @unique
+  points         Int            @default(0)
+  isVerified     Boolean        @default(false)
+  isActive       Boolean        @default(true)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  bookings       Booking[]
+  staff          Staff?
+  pointHistories PointHistory[]
+}
+
+model Hotel {
+  id           String        @id @default(uuid())
+  name         String
+  slug         String        @unique
+  address      String
+  city         String        @default("TP. Hồ Chí Minh")
+  phone        String?
+  email        String?
+  website      String?
+  description  String?
+  taxCode      String?
+  starRating   Int           @default(5)
+  checkInTime  String        @default("14:00")
+  checkOutTime String        @default("12:00")
+  settings     Json          @default("{}")
+  isActive     Boolean       @default(true)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  roomTypes    RoomType[]
+  rooms        Room[]
+  bookings     Booking[]
+  staff        Staff[]
+  channelSyncs ChannelSync[]
+}
+
+model RoomType {
+  id             String   @id @default(uuid())
+  hotelId        String
+  hotel          Hotel    @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  code           String
+  name           String
+  description    String?
+  baseRateHourly Float
+  baseRateDaily  Float
+  weekendRate    Float
+  holidayRate    Float
+  maxGuests      Int      @default(2)
+  area           Int      @default(30)
+  bedType        String   @default("King")
+  amenities      Json     @default("[]")
+  images         Json     @default("[]")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  rooms          Room[]
+
+  @@unique([hotelId, code])
+}
+
+model Room {
+  id                  String               @id @default(uuid())
+  hotelId             String
+  hotel               Hotel                @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  roomTypeId          String
+  roomType            RoomType             @relation(fields: [roomTypeId], references: [id], onDelete: Restrict)
+  roomNumber          String
+  floor               Int                  @default(1)
+  status              String               @default("EMPTY")
+  notes               String?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+
+  bookings            Booking[]
+  housekeepingReports HousekeepingReport[]
+
+  @@unique([hotelId, roomNumber])
+}
+
+model Booking {
+  id                  String               @id @default(uuid())
+  bookingCode         String               @unique
+  hotelId             String
+  hotel               Hotel                @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  roomId              String
+  room                Room                 @relation(fields: [roomId], references: [id], onDelete: Restrict)
+  userId              String?
+  user                User?                @relation(fields: [userId], references: [id], onDelete: SetNull)
+  guestName           String?
+  guestPhone          String?
+  guestEmail          String?
+  guestIdCard         String?
+  checkIn             DateTime
+  checkOut            DateTime
+  actualCheckIn       DateTime?
+  actualCheckOut      DateTime?
+  guests              Int                  @default(1)
+  childrenCount       Int                  @default(0)
+  bookingType         String               @default("DAILY")
+  hours               Int?
+  status              String               @default("PENDING")
+  source              String               @default("WEBSITE")
+  roomRate            Float
+  extraCharges        Json                 @default("[]")
+  discountAmount      Float                @default(0)
+  redeemedPoints      Int                  @default(0)
+  taxAmount           Float                @default(0)
+  specialTaxAmount    Float                @default(0)
+  totalAmount         Float
+  depositAmount       Float                @default(0)
+  paidAmount          Float                @default(0)
+  cancellationFee     Float                @default(0)
+  paymentType         String               @default("FULL")
+  notes               String?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+
+  payments            Payment[]
+  invoice             Invoice?
+  housekeepingReports HousekeepingReport[]
+
+  @@index([hotelId, status])
+  @@index([roomId, checkIn, checkOut])
+}
+
+model Payment {
+  id            String    @id @default(uuid())
+  bookingId     String
+  booking       Booking   @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  provider      String
+  amount        Float
+  currency      String    @default("VND")
+  status        String    @default("INITIATED")
+  paymentType   String    @default("FULL")
+  transactionId String?   @unique
+  gatewayRef    String?
+  metadata      Json?
+  paidAt        DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Invoice {
+  id               String   @id @default(uuid())
+  invoiceNumber    String   @unique
+  bookingId        String   @unique
+  booking          Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  customerName     String?
+  customerTaxCode  String?
+  customerAddress  String?
+  customerEmail    String?
+  subtotal         Float
+  vatRate          Float    @default(0.08)
+  vatAmount        Float
+  specialTaxItems  Json     @default("[]")
+  specialTaxAmount Float    @default(0)
+  discountAmount   Float    @default(0)
+  totalAmount      Float
+  eInvoiceRef      String?
+  issuedAt         DateTime @default(now())
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Staff {
+  id                  String               @id @default(uuid())
+  userId              String               @unique
+  user                User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  hotelId             String
+  hotel               Hotel                @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  staffRole           String
+  employeeCode        String?
+  department          String?
+  isActive            Boolean              @default(true)
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+
+  housekeepingReports HousekeepingReport[]
+}
+
+model HousekeepingReport {
+  id               String    @id @default(uuid())
+  roomId           String
+  room             Room      @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  bookingId        String?
+  booking          Booking?  @relation(fields: [bookingId], references: [id], onDelete: SetNull)
+  staffId          String?
+  staff            Staff?    @relation(fields: [staffId], references: [id], onDelete: SetNull)
+  cleaningStatus   String    @default("PENDING")
+  minibarUsed      Json      @default("[]")
+  missingItems     Json      @default("[]")
+  damageNotes      String?
+  extraChargeTotal Float     @default(0)
+  completedAt      DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+}
+
+model ChannelSync {
+  id           String    @id @default(uuid())
+  hotelId      String
+  hotel        Hotel     @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  channel      String
+  isEnabled    Boolean   @default(true)
+  apiKeyMasked String?
+  lastSyncAt   DateTime?
+  syncStatus   String    @default("SUCCESS")
+  syncedRooms  Int       @default(0)
+  errorLog     String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@unique([hotelId, channel])
+}
+
+model OtpCode {
+  id        String   @id @default(uuid())
+  phone     String
+  code      String
+  expiresAt DateTime
+  verified  Boolean  @default(false)
+  attempts  Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([phone, code])
+}
+
+model PointHistory {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  points      Int
+  type        String
+  description String
+  bookingId   String?
+  createdAt   DateTime @default(now())
+}

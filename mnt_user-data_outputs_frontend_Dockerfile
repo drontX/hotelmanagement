@@ -1,0 +1,29 @@
+# Build context: thư mục gốc của monorepo (xem docker-compose.yml)
+FROM node:20-alpine
+WORKDIR /app
+
+# NEXT_PUBLIC_* được nhúng vào bundle lúc build nên phải khai báo ARG ở đây
+ARG NEXT_PUBLIC_API_URL=http://localhost:8000/api
+ARG NEXT_PUBLIC_SOCKET_URL=http://localhost:8000
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL \
+    NEXT_PUBLIC_SOCKET_URL=$NEXT_PUBLIC_SOCKET_URL \
+    NEXT_TELEMETRY_DISABLED=1
+
+COPY package.json package-lock.json ./
+COPY packages/shared/package.json packages/shared/
+COPY backend/package.json backend/
+COPY frontend/package.json frontend/
+COPY admin/package.json admin/
+
+RUN npm ci --workspace=@hotel/shared --workspace=hotel-management-frontend
+
+COPY packages/shared packages/shared
+COPY frontend frontend
+
+RUN npm run build:shared && npm run build:frontend
+
+ENV NODE_ENV=production PORT=3000
+WORKDIR /app/frontend
+EXPOSE 3000
+
+CMD ["npx", "next", "start", "-p", "3000"]

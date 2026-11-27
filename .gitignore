@@ -1,0 +1,49 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build output and caches
+.next/
+**/.next/
+dist/
+**/dist/
+build/
+**/build/
+coverage/
+**/coverage/
+.turbo/
+**/.turbo/
+.vite/
+**/.vite/
+.cache/
+**/.cache/
+*.tsbuildinfo
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+_env
+_env.*
+
+# Local certificates and keys
+nginx/certs/*
+!nginx/certs/.gitkeep
+*.pem
+*.key
+*.crt
+*.p12
+
+# Local databases and logs
+*.sqlite
+*.sqlite3
+*.db
+*.log
+npm-debug.log*
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json

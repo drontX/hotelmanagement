@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Khám phá phòng nghỉ và trải nghiệm đặt phòng tại Starystal Hotel.">
+  <title>Starystal Hotel</title>
+  <link rel="icon" type="image/png" sizes="96x96" href="ui/favicon.png">
+  <link rel="icon" type="image/svg+xml" sizes="any" href="ui/favicon.svg">
+  <link rel="stylesheet" href="ui/fonts/fonts.css">
+  <link rel="stylesheet" href="ui/styles.css">
+  <script src="ui/rooms.js" defer></script>
+  <script src="ui/app.js" defer></script>
+</head>
+<body>
+  <div id="guest-view">
+    <a class="skip-link" href="#trang-chu">Đến nội dung chính</a>
+    <header class="guest-header">
+      <div class="guest-wrap header-inner">
+        <a href="#trang-chu" class="brand" aria-label="Starystal Hotel, trang chủ">
+          <img class="brand-mark" src="ui/favicon.png" alt="" width="38" height="38">
+          <span class="brand-word">Starystal<small>Hotel</small></span>
+        </a>
+        <nav aria-label="Điều hướng khách">
+          <a href="#phong">Các loại phòng</a>
+          <a href="#booking-policy">Chính sách</a>
+          <a href="#tai-khoan">Đặt phòng của tôi</a>
+        </nav>
+        <a class="outline-button" href="#vai-tro">Chọn vai trò <span aria-hidden="true">↗</span></a>
+      </div>
+    </header>
+    <main id="trang-chu" tabindex="-1">
+      <section class="guest-wrap guest-hero" aria-labelledby="hero-title">
+        <div class="hero-content">
+          <h1 id="hero-title">Nghỉ tại <em>Sài Gòn</em></h1>
+          <p>Chọn phòng đơn, phòng đôi hoặc phòng gia đình cho kỳ lưu trú của bạn tại TP. Hồ Chí Minh.</p>
+          <a class="text-button hero-link" href="#phong">Xem các loại phòng <span aria-hidden="true">↓</span></a>
+        </div>
+        <img class="hero-photo" src="ui/images/hero.jpg" alt="Ảnh minh họa phòng nghỉ với ánh sáng tự nhiên" width="1500" height="1125" fetchpriority="high">
+      </section>
+      <div class="guest-wrap search-wrap" id="tim-phong">
+        <form class="guest-search" id="room-search" aria-label="Tìm phòng theo ngày lưu trú" aria-describedby="booking-policy">
+          <label><span>Ngày nhận phòng</span><input id="check-in" type="date" required></label>
+          <label><span>Ngày trả phòng</span><input id="check-out" type="date" required></label>
+          <label><span>Số lượng khách</span><select id="guest-count"><option value="1">1 khách</option><option value="2" selected>2 khách</option><option value="3">3 khách</option><option value="4">4 khách</option></select></label>
+          <button class="primary-button" type="submit">Tìm phòng <span aria-hidden="true">→</span></button>
+        </form>
+        <p class="booking-policy" id="booking-policy"><strong>Chính sách đặt phòng</strong><span>Đặt trước 24 giờ đến 31 ngày. Từ 7 ngày cần cọc 20%. Đặt gần trả toàn bộ khi nhận phòng.</span></p>
+      </div>
+      <section class="guest-wrap room-section" id="phong" aria-labelledby="rooms-title">
+        <div class="section-heading">
+          <h2 id="rooms-title">Các loại phòng</h2>
+          <div class="room-section-actions"><span>Ảnh minh họa</span><button class="text-button" id="reset-search" type="button" hidden>Xem tất cả phòng</button></div>
+        </div>
+        <p id="search-status" class="search-status" role="status" hidden></p>
+        <div class="room-grid" id="guest-rooms"></div>
+      </section>
+      <section class="guest-account" id="tai-khoan" aria-labelledby="account-title">
+        <div class="guest-wrap account-layout">
+          <div class="account-intro"><h2 id="account-title">Đặt phòng của tôi</h2><p>Đặt phòng mẫu được lưu trên trình duyệt này.</p></div>
+          <div class="account-content" id="guest-account"></div>
+        </div>
+      </section>
+    </main>
+    <footer class="guest-footer">
+      <div class="guest-wrap footer-inner">
+        <a href="#trang-chu" class="brand" aria-label="Starystal Hotel, trang chủ">
+          <img class="brand-mark" src="ui/favicon.png" alt="" width="38" height="38">
+          <span class="brand-word">Starystal<small>Hotel</small></span>
+        </a>
+        <a href="#vai-tro">Cổng nhân viên và quản lý <span aria-hidden="true">↗</span></a>
+      </div>
+    </footer>
+  </div>
+
+  <main id="roles-view" class="portal-roles" hidden>
+    <div class="roles-panel">
+      <a class="text-button" id="roles-back" href="#trang-chu"><span aria-hidden="true">←</span> <span id="roles-back-label">Về trang khách sạn</span></a>
+      <header class="roles-heading"><h1 id="roles-title">Chọn vai trò</h1><p id="roles-description">Đăng nhập bằng tài khoản mẫu của Starystal Hotel.</p></header>
+      <div class="role-grid" id="role-options"></div>
+    </div>
+  </main>
+
+  <div id="admin-view" class="operations" hidden>
+    <aside class="operations-sidebar">
+      <a href="#vai-tro" class="brand" aria-label="Starystal Hotel, chọn vai trò">
+        <img class="brand-mark" src="ui/favicon.png" alt="" width="38" height="38">
+        <span class="brand-word">Starystal<small>Vận hành</small></span>
+      </a>
+      <nav id="admin-nav" aria-label="Điều hướng vận hành"></nav>
+      <a class="operations-exit" href="#vai-tro"><span aria-hidden="true">←</span> Đổi vai trò</a>
+    </aside>
+    <main class="operations-main">
+      <header class="operations-header"><span id="admin-hotel-name"></span><div class="operations-profile"><span id="admin-identity"></span><span class="demo-label">Dữ liệu mẫu</span></div></header>
+      <p id="handover-announcement" class="handover-announcement" role="status" hidden></p>
+      <div class="operations-content" id="admin-content"></div>
+    </main>
+  </div>
+
+  <dialog class="room-dialog" id="room-dialog" aria-labelledby="room-dialog-title"></dialog>
+  <noscript><p class="guest-wrap">Bật JavaScript trên trình duyệt để sử dụng bản giao diện mẫu.</p></noscript>
+</body>
+</html>

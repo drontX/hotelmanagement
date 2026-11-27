@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>Ngôi sao, chiếc giường và sao băng</title>
+  <defs>
+    <linearGradient id="gold" x2="0" y2="1">
+      <stop stop-color="#f4dfac" />
+      <stop offset="1" stop-color="#d3a95e" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="#33362b" />
+  <path d="M28 11 35 26 52 28 40 39 43 56 28 48 13 56 16 39 4 28 21 26Z" fill="url(#gold)" />
+  <g fill="none" stroke="#33362b" stroke-width="3.25" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M18 41V30m20 8v3m-20-4h20v-1a4 4 0 0 0-4-4h-8v5" />
+  </g>
+  <circle cx="22" cy="33.25" r="1.65" fill="#33362b" />
+  <path d="M37 19 50 11m-7 11 10-7" fill="none" stroke="#f4dfac" stroke-width="2.2" stroke-linecap="round" />
+  <path d="m55 4 1.6 4.9L62 10l-4.9 2-1.5 5-2-4.6-4.6-1.7 4.5-2Z" fill="#fff3d7" />
+</svg>

@@ -1,0 +1,22 @@
+{
+  "name": "grand-saigon-hotel-monorepo",
+  "version": "2.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/shared",
+    "backend",
+    "frontend",
+    "admin"
+  ],
+  "scripts": {
+    "build:shared": "npm --workspace=@hotel/shared run build",
+    "dev:backend": "npm --workspace=hotel-management-backend run dev",
+    "dev:frontend": "npm --workspace=hotel-management-frontend run dev",
+    "dev:admin": "npm --workspace=hotel-management-admin run dev",
+    "build:backend": "npm --workspace=hotel-management-backend run build",
+    "build:frontend": "npm --workspace=hotel-management-frontend run build",
+    "build:admin": "npm --workspace=hotel-management-admin run build",
+    "test:backend": "npm --workspace=hotel-management-backend run test",
+    "db:local:setup": "npm --workspace=hotel-management-backend run db:local:setup"
+  }
+}

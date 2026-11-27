@@ -1,0 +1,12 @@
+**/node_modules
+**/dist
+**/.next
+**/.turbo
+.git
+.env
+.env.*
+_env
+_env.*
+*.log
+.DS_Store
+nginx/certs
